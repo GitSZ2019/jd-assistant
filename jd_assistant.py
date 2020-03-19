@@ -1108,7 +1108,7 @@ class Assistant(object):
             'Host': 'itemko.jd.com',
             'Referer': 'https://item.jd.com/{}.html'.format(sku_id),
         }
-        retry_interval = 0.5
+        retry_interval = 0.01
 
         while True:
             resp = self.sess.get(url=url, headers=headers, params=payload)
@@ -1413,3 +1413,19 @@ class Assistant(object):
                         return
 
                 time.sleep(stock_interval)
+
+    def exec_seckill_proc(self, sku_id, buy_time, retry, interval, num):
+        """定时抢购线程
+        :param cls: Assistant实例
+        :param sku_id: 商品id
+        :param buy_time: 与商品id对应的抢购时间
+        :param retry: 抢购重复执行次数
+        :param interval: 抢购执行间隔
+        :param num: 购买数量
+        :return:
+        """
+        # 抢购定时
+        logger.info('准备抢购商品:%s', sku_id)
+        tb = Timer(buy_time)
+        tb.start()
+        self.exec_seckill(sku_id, retry, interval, num)
